@@ -18,7 +18,7 @@ load_dotenv()
 app = Dash(__name__,
           meta_tags=[{'name': 'viewport', 'content': 'width=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale=0.5,'}], external_stylesheets=[dbc.themes.MINTY])
 
-application = app.server
+server = app.server
 app.title = "Moodfy"
 app.config.suppress_callback_exceptions = True
 
@@ -258,4 +258,4 @@ def display_results(dataset, dataset_db, playlistMood):
     return None, bertify.create_mood_scatter_plot(playlistMood, outlier_data, inlier_data), {'display': 'block'}, display_artistInfo(outlier_artists), display_inliers(inlier_artists), {'display': 'block'}
     
 if __name__ == "__main__":
-    application.run(debug=True, port=8080)
+    app.run(debug=True)
