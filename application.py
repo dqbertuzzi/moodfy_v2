@@ -173,8 +173,9 @@ def update_output(clicks, input_value):
                 '''
 
                 new_entries = pd.read_sql(query, con=conn)
+                print(new_entries)
 
-                new_entries.to_sql(name=table_name, con=conn,  index=False)
+                new_entries.to_sql(name=table_name, con=conn, if_exists='append', index=False)
 
                 conn.execute(text("DROP TABLE temp;"))
                 results = conn.execute(text("SELECT * FROM music_data"))
