@@ -165,7 +165,7 @@ def update_output(clicks, input_value):
                     'instrumentalness', 'liveness', 'valence', 'tempo', 'type', 'id', 'uri']
 
             with engine.begin() as conn:
-                final_dataset[cols].to_sql(name='temp', con=conn, if_exists='replace', index=False)
+                final_dataset[cols].to_sql(name='temp', con=conn, index=False)
                 query = '''
                     SELECT * FROM temp
                     EXCEPT
@@ -174,7 +174,7 @@ def update_output(clicks, input_value):
 
                 new_entries = pd.read_sql(query, con=conn)
 
-                new_entries.to_sql(name=table_name, con=conn, if_exists='append', index=False)
+                new_entries.to_sql(name=table_name, con=conn,  index=False)
 
                 conn.execute(text("DROP TABLE temp;"))
                 results = conn.execute(text("SELECT * FROM music_data"))
