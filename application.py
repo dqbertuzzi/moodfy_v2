@@ -167,13 +167,13 @@ def update_output(clicks, input_value):
             with engine.begin() as conn:
                 final_dataset[cols].to_sql(name='temp', con=conn, index=False)
                 query = '''
-                    SELECT * FROM temp
-                    EXCEPT
-                    SELECT * FROM music_data
+                    SELECT t2.*
+                    FROM temp t2
+                    LEFT JOIN music_data t1 ON t2.track_href = t1.track_href
+                    WHERE t1.track_href IS NULL;
                 '''
 
                 new_entries = pd.read_sql(query, con=conn)
-                print(new_entries)
 
                 new_entries.to_sql(name=table_name, con=conn, if_exists='append', index=False)
 
