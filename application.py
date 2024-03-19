@@ -168,12 +168,14 @@ def update_output(clicks, input_value):
                 final_dataset[cols].to_sql(name='temp', con=conn, index=False)
                 query = '''
                     WITH n_dupe_new_entries AS (
-                    SELECT *
+                    SELECT artist, artist_id, album_image, track_title, track_href, danceability,
+                              energy, key, loudness, mode, speechiness, acousticness,
+                              instrumentalness, liveness, valence, tempo, type, id, uri
                     FROM (
-                    SELECT *, ROW_NUMBER() OVER(PARTITION BY track_href ORDER BY id) AS window 
-                    FROM temp
+                    SELECT *, ROW_NUMBER() OVER(PARTITION BY track_href ORDER BY id) AS wnd 
+                    FROM music_data
                     ) x
-                    WHERE window = 1
+                    WHERE wnd = 1
                     )
                     SELECT t2.*
                     FROM n_dupe_new_entries t2
