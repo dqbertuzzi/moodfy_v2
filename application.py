@@ -167,8 +167,16 @@ def update_output(clicks, input_value):
             with engine.begin() as conn:
                 final_dataset[cols].to_sql(name='temp', con=conn, index=False)
                 query = '''
+                    WITH n_dupe_new_entries AS (
+                    SELECT *
+                    FROM (
+                    SELECT *, ROW_NUMBER() OVER(PARTITION BY track_href ORDER BY id) AS window 
+                    FROM temp
+                    ) x
+                    WHERE window = 1
+                    )
                     SELECT t2.*
-                    FROM temp t2
+                    FROM n_dupe_new_entries t2
                     LEFT JOIN music_data t1 ON t2.track_href = t1.track_href
                     WHERE t1.track_href IS NULL;
                 '''
